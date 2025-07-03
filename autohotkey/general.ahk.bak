@@ -1,0 +1,90 @@
+#SingleInstance Force
+
+
+
+; Ctrl + Alt + D - Insert current date and time
+^!f:: {
+    currentDateTime := Format("{} {}", FormatTime(,"yyyyMMdd"), " maia.dam")
+    SendText(currentDateTime)
+}
+
+; Ctrl + Alt + D - Insert current date and time
+^!d:: {
+    currentDateTime := FormatTime(,"yyyyMMdd")
+    SendText(currentDateTime)
+}
+
+; Ctrl + Alt + D - Insert current date and time
+^+!d:: {
+    currentDateTime := FormatTime(,"yyyyMMdd-HHmm")
+    SendText(currentDateTime)
+}
+
+;#e:: {
+    ;Run("C:\Program Files\WindowsApps\Files_3.6.0.0_x64__1y0xx7n9077rq4\Files.App\Files.exe")
+    ;return 0
+;}
+
+;^!u:: ; Atalho Ctrl + Alt + U
+;{
+ ;   Send "^c" ; Copia o texto selecionado
+  ;  ClipWait
+   ; Sleep(200)
+;    temp:= StrUpper(A_Clipboard) ; Converte o texto em maiúsculas
+    ;A_Clipboard := StrUpper(temp) ; Converte o texto em maiúsculas
+    ;Send "^v" ; Cola o texto em maiúsculas
+;}
+
+
+; uppercase exceto strings
+^!u:: { ; Atalho Ctrl + Alt + U
+
+    Send("^c")
+    ClipWait
+    Sleep(200)
+    oldText := A_Clipboard
+    ;
+    newText := ""
+    inQuotes := false
+    ;
+    Loop StrLen(oldText ) {
+        currentChar := SubStr(oldText, A_Index, 1)
+
+        if (currentChar = "'") {
+            inQuotes := !inQuotes
+            newText .= currentChar
+        } else if (inQuotes) {
+            newText .= currentChar
+        } else {
+            newText .= StrUpper(currentChar)
+        }
+    }
+    ;
+    A_Clipboard := newText
+    Send("^v")
+}
+
+
+; Remover texto entre "INTO" e "FROM"
+^!i:: ; Atalho Ctrl + Alt
+{
+    ;
+    Send("^c")
+    ClipWait
+    Sleep(200)
+
+    ;
+    originalText := A_Clipboard
+
+    ; Expressão regular para remover o texto entre "INTO" e "FROM"
+    modifiedText := RegExReplace(originalText, "INTO(.*)FROM", "FROM")
+    modifiedText := RegExReplace(modifiedText, "LEFT JOIN", "`nLEFT JOIN")
+    modifiedText := RegExReplace(modifiedText, "WHERE", "`nWHERE")
+
+    ; Substitui o texto da área de transferência pelo texto modificado
+    A_Clipboard := modifiedText
+
+    ; Cola o texto modificado
+    Send("^v")
+}
+

@@ -1,0 +1,5 @@
+#Requires AutoHotkey v2.0
+
+CoordMode("Mouse", "Screen") ; Garante que as coordenadas sejam globais
+Click(3000, 1080)
+Sleep(1000)
